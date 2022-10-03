@@ -16,6 +16,7 @@
     "vite-plugin-solid": "^2.3.0"
   },
   "dependencies": {
+    "buffer": "^6.0.3",
     "lodash": "^4.17.21",
     "solid-js": "^1.5.1"
   }
