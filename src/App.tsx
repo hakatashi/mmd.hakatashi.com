@@ -1,4 +1,4 @@
-import { Component, createSignal, For, JSX } from 'solid-js';
+import { Component, createEffect, createSignal, For, JSX } from 'solid-js';
 
 import styles from './App.module.css';
 import {sampleSize, throttle} from 'lodash';
@@ -20,7 +20,7 @@ const sha256 = async (buffer: Buffer) => {
 const poses = ['back_and_forward_legs', 'cross_leg', 'doggy', 'doggy_open_legs', 'doggy_with_v_sign', 'facing_upward', 'finger_pointing_up', 'folding_arms_behind_head', 'folding_arm_behind_head', 'goodbye_sengen', 'holding_leg_upward', 'jumping', 'lean_against_desk', 'looking_back_with_finger_on_mouth', 'lying', 'lying_with_v_sign', 'm_open', 'raising_both_hands', 'shhh', 'showing_hip', 'side_m_open', 'sitting_bending_backward', 'sitting_crossing_arms', 'sitting_self_massage', 'sitting_with_looking_at_sky', 'stand1', 'stand2', 'stand_back_hand_on_breast', 'stand_picking_skirt', 'waving_hand'];
 
 const App: Component = () => {
-  const [password, setPassword] = createSignal('');
+  const [password, setPassword] = createSignal(localStorage.getItem('password') ?? '');
   const [models, setModels] = createSignal<Model[]>([]);
 
   const onInputPassword: JSX.EventHandlerUnion<HTMLInputElement, Event> = (event) => {
@@ -48,6 +48,15 @@ const App: Component = () => {
     }
     setModels(modelList);
   }, 500);
+
+  createEffect(() => {
+    onChangePassword();
+  });
+
+  createEffect(() => {
+    console.log('saved');
+    localStorage.setItem('password', password());
+  });
 
   return (
     <div class={styles.App}>
