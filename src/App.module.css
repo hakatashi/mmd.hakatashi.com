@@ -4,7 +4,11 @@
 
 .logo {
   animation: logo-spin infinite 20s linear;
-  height: 40vmin;
+  height: 20vmin;
+  width: 20vmin;
+  margin: 5vmin 0;
+  border-radius: 3vmin;
+  background-color: #2196F3;
   pointer-events: none;
 }
 
@@ -19,8 +23,19 @@
   color: white;
 }
 
-.link {
-  color: #b318f0;
+.hint {
+  width: 50rem;
+  max-width: 90%;
+  word-break: break-all;
+}
+
+.password {
+  outline: none;
+  font-size: 2rem;
+  text-align: center;
+  border-radius: 3px;
+  border: 0;
+  color: #555;
 }
 
 @keyframes logo-spin {
