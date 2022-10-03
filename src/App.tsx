@@ -58,6 +58,8 @@ const App: Component = () => {
     localStorage.setItem('password', password());
   });
 
+  const mode = localStorage.getItem('mode') ?? 'original';
+
   return (
     <div class={styles.App}>
       {models().length === 0 ? (
@@ -70,7 +72,7 @@ const App: Component = () => {
         </header>
       ) : (
         <For each={sampleSize(models(), 100)}>{(model, i) =>
-          <img class={styles.thumbnail} src={`https://mmd-archive-thumbs.s3.ap-northeast-1.amazonaws.com/${model.hash}/nude/render_${poses[i() % poses.length]}.webp`} />
+          <img class={styles.thumbnail} src={`https://mmd-archive-thumbs.s3.ap-northeast-1.amazonaws.com/${model.hash}/${mode}/render_${poses[i() % poses.length]}.webp`} />
         }</For>
       )}
     </div>
