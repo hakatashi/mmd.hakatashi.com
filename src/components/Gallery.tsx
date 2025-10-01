@@ -13,6 +13,8 @@ interface Model {
 
 interface GalleryProps {
   password: () => string;
+  sampledModels: () => Model[];
+  setSampledModels: (models: Model[]) => void;
 }
 
 const sha256 = async (buffer: Buffer) => {
@@ -61,6 +63,12 @@ const Gallery: Component<GalleryProps> = (props) => {
         modelList.push({dirname, filename, hash});
       }
       setModels(modelList);
+
+      // Sample models and store them if not already sampled
+      if (props.sampledModels().length === 0) {
+        const sampled = sampleSize(modelList, 20);
+        props.setSampledModels(sampled);
+      }
     } catch (error) {
       console.error('Failed to load models:', error);
       navigate('/');
@@ -71,11 +79,21 @@ const Gallery: Component<GalleryProps> = (props) => {
     loadModels();
   });
 
+  const refreshSamples = () => {
+    const sampled = sampleSize(models(), 20);
+    props.setSampledModels(sampled);
+  };
+
   return (
     <>
       <ModeSwitcher mode={mode} setMode={setMode} />
+      <div class={styles.header}>
+        <button class={styles.refreshButton} onClick={refreshSamples}>
+          🔄 Refresh Samples
+        </button>
+      </div>
       <div class={styles.container}>
-        <For each={sampleSize(models(), 20)}>{(model, i) =>
+        <For each={props.sampledModels()}>{(model, i) =>
           <img
             class={styles.thumbnail}
             src={`https://mmd-archive-thumbs.s3.ap-northeast-1.amazonaws.com/${model.hash}/${mode()}/render_${poses[i() % poses.length]}.webp`}

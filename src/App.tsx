@@ -7,8 +7,15 @@ import Gallery from './components/Gallery';
 import ModelDetails from './components/ModelDetails';
 import ProtectedRoute from './components/ProtectedRoute';
 
+interface Model {
+  dirname: string;
+  filename: string;
+  hash: string;
+}
+
 const App: Component = () => {
   const [password, setPassword] = createSignal(localStorage.getItem('password') ?? '');
+  const [sampledModels, setSampledModels] = createSignal<Model[]>([]);
 
   createEffect(() => {
     localStorage.setItem('password', password());
@@ -25,7 +32,7 @@ const App: Component = () => {
           path="/gallery"
           component={() => (
             <ProtectedRoute password={password}>
-              <Gallery password={password} />
+              <Gallery password={password} sampledModels={sampledModels} setSampledModels={setSampledModels} />
             </ProtectedRoute>
           )}
         />
@@ -33,7 +40,7 @@ const App: Component = () => {
           path="/models/:hash"
           component={() => (
             <ProtectedRoute password={password}>
-              <ModelDetails password={password} />
+              <ModelDetails password={password} sampledModels={sampledModels} />
             </ProtectedRoute>
           )}
         />

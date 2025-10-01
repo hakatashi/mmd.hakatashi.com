@@ -13,6 +13,7 @@ interface Model {
 
 interface ModelDetailsProps {
   password: () => string;
+  sampledModels: () => Model[];
 }
 
 const sha256 = async (buffer: Buffer) => {
@@ -32,6 +33,17 @@ const ModelDetails: Component<ModelDetailsProps> = (props) => {
 
   createEffect(() => {
     localStorage.setItem('mode', mode());
+  });
+
+  createEffect(() => {
+    // Try to find model from sampledModels first
+    const foundModel = props.sampledModels().find(m => m.hash === params.hash);
+    if (foundModel) {
+      setModel(foundModel);
+    } else {
+      // Fallback: load from API if not in sampled models
+      loadModel();
+    }
   });
 
   const loadModel = throttle(async () => {
@@ -73,16 +85,15 @@ const ModelDetails: Component<ModelDetailsProps> = (props) => {
     }
   }, 500);
 
-  createEffect(() => {
-    loadModel();
-  });
-
   return (
     <>
       <ModeSwitcher mode={mode} setMode={setMode} />
       <div class={styles.container}>
         {model() && (
           <>
+            <button class={styles.backButton} onClick={() => navigate('/gallery')}>
+              ← Back to Gallery
+            </button>
             <h2>{model()!.dirname}</h2>
             <p>{model()!.filename}</p>
             <div class={styles.poseGrid}>
