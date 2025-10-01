@@ -2,7 +2,7 @@ import { Component, JSX } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import { throttle } from 'lodash';
 import { Buffer } from 'buffer';
-import styles from '../App.module.css';
+import styles from './Login.module.css';
 
 interface LoginProps {
   password: () => string;

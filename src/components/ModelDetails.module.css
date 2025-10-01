@@ -1,0 +1,31 @@
+.container {
+  text-align: center;
+}
+
+.poseGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.poseItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.thumbnail {
+  width: 256px;
+  height: 256px;
+}
+
+.poseName {
+  font-size: 0.875rem;
+  color: #555;
+  text-transform: capitalize;
+  margin: 0;
+}

@@ -4,6 +4,7 @@ import { Router, Route } from '@solidjs/router';
 import styles from './App.module.css';
 import Login from './components/Login';
 import Gallery from './components/Gallery';
+import ModelDetails from './components/ModelDetails';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const App: Component = () => {
@@ -25,6 +26,14 @@ const App: Component = () => {
           component={() => (
             <ProtectedRoute password={password}>
               <Gallery password={password} />
+            </ProtectedRoute>
+          )}
+        />
+        <Route
+          path="/models/:hash"
+          component={() => (
+            <ProtectedRoute password={password}>
+              <ModelDetails password={password} />
             </ProtectedRoute>
           )}
         />
