@@ -3,6 +3,7 @@ import { useNavigate } from '@solidjs/router';
 import { sampleSize, throttle } from 'lodash';
 import { Buffer } from 'buffer';
 import styles from './Gallery.module.css';
+import ModeSwitcher from './ModeSwitcher';
 
 interface Model {
   dirname: string;
@@ -26,6 +27,11 @@ const poses = ['back_and_forward_legs', 'cross_leg', 'doggy', 'doggy_open_legs',
 const Gallery: Component<GalleryProps> = (props) => {
   const navigate = useNavigate();
   const [models, setModels] = createSignal<Model[]>([]);
+  const [mode, setMode] = createSignal(localStorage.getItem('mode') ?? 'original');
+
+  createEffect(() => {
+    localStorage.setItem('mode', mode());
+  });
 
   const loadModels = throttle(async () => {
     if (!props.password() || props.password().match(/[^a-zA-Z0-9]/)) {
@@ -65,18 +71,19 @@ const Gallery: Component<GalleryProps> = (props) => {
     loadModels();
   });
 
-  const mode = localStorage.getItem('mode') ?? 'original';
-
   return (
-    <div class={styles.container}>
-      <For each={sampleSize(models(), 100)}>{(model, i) =>
-        <img
-          class={styles.thumbnail}
-          src={`https://mmd-archive-thumbs.s3.ap-northeast-1.amazonaws.com/${model.hash}/${mode}/render_${poses[i() % poses.length]}.webp`}
-          onClick={() => navigate(`/models/${model.hash}`)}
-        />
-      }</For>
-    </div>
+    <>
+      <ModeSwitcher mode={mode} setMode={setMode} />
+      <div class={styles.container}>
+        <For each={sampleSize(models(), 20)}>{(model, i) =>
+          <img
+            class={styles.thumbnail}
+            src={`https://mmd-archive-thumbs.s3.ap-northeast-1.amazonaws.com/${model.hash}/${mode()}/render_${poses[i() % poses.length]}.webp`}
+            onClick={() => navigate(`/models/${model.hash}`)}
+          />
+        }</For>
+      </div>
+    </>
   );
 };
 

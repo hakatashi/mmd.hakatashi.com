@@ -3,6 +3,7 @@ import { useNavigate, useParams } from '@solidjs/router';
 import { throttle } from 'lodash';
 import { Buffer } from 'buffer';
 import styles from './ModelDetails.module.css';
+import ModeSwitcher from './ModeSwitcher';
 
 interface Model {
   dirname: string;
@@ -27,6 +28,11 @@ const ModelDetails: Component<ModelDetailsProps> = (props) => {
   const navigate = useNavigate();
   const params = useParams();
   const [model, setModel] = createSignal<Model | null>(null);
+  const [mode, setMode] = createSignal(localStorage.getItem('mode') ?? 'original');
+
+  createEffect(() => {
+    localStorage.setItem('mode', mode());
+  });
 
   const loadModel = throttle(async () => {
     if (!props.password() || props.password().match(/[^a-zA-Z0-9]/)) {
@@ -71,29 +77,30 @@ const ModelDetails: Component<ModelDetailsProps> = (props) => {
     loadModel();
   });
 
-  const mode = localStorage.getItem('mode') ?? 'original';
-
   return (
-    <div class={styles.container}>
-      {model() && (
-        <>
-          <h2>{model()!.dirname}</h2>
-          <p>{model()!.filename}</p>
-          <div class={styles.poseGrid}>
-            <For each={poses}>{(pose) =>
-              <div class={styles.poseItem}>
-                <img
-                  class={styles.thumbnail}
-                  src={`https://mmd-archive-thumbs.s3.ap-northeast-1.amazonaws.com/${model()!.hash}/${mode}/render_${pose}.webp`}
-                  alt={pose}
-                />
-                <p class={styles.poseName}>{pose.replace(/_/g, ' ')}</p>
-              </div>
-            }</For>
-          </div>
-        </>
-      )}
-    </div>
+    <>
+      <ModeSwitcher mode={mode} setMode={setMode} />
+      <div class={styles.container}>
+        {model() && (
+          <>
+            <h2>{model()!.dirname}</h2>
+            <p>{model()!.filename}</p>
+            <div class={styles.poseGrid}>
+              <For each={poses}>{(pose) =>
+                <div class={styles.poseItem}>
+                  <img
+                    class={styles.thumbnail}
+                    src={`https://mmd-archive-thumbs.s3.ap-northeast-1.amazonaws.com/${model()!.hash}/${mode()}/render_${pose}.webp`}
+                    alt={pose}
+                  />
+                  <p class={styles.poseName}>{pose.replace(/_/g, ' ')}</p>
+                </div>
+              }</For>
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 
