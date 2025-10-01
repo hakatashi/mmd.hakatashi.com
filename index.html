@@ -9,6 +9,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400&display=swap" rel="stylesheet">
     <link rel="shortcut icon" type="image/ico" href="/src/assets/favicon.ico" />
     <title>Solid App</title>
+    <script>
+      // GitHub Pages SPA redirect handler
+      // Restores the original URL from sessionStorage after 404.html redirects here
+      (function() {
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
