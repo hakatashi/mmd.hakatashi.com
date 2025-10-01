@@ -24,12 +24,16 @@ npm outdated       # Check for outdated packages
 ## Architecture Overview
 
 ### Core Application Flow
-1. **Password Authentication**: User enters alphanumeric password with I-Ching style visual hint
-2. **Data Fetching**: Retrieves model metadata from S3 endpoint (`https://hakata-public.s3.ap-northeast-1.amazonaws.com/mmd-archive-thumbs/${password}.json`)
-3. **Data Processing**: Decodes hex-encoded file paths and generates SHA-256 hashes for S3 keys
-4. **Gallery Display**: Shows random sample of 100 models with 30+ pose variations per model
+1. **Routing**: Uses `@solidjs/router` for client-side navigation with two routes: `/` (login) and `/gallery` (protected)
+2. **Password Authentication**: User enters alphanumeric password with I-Ching style visual hint on login page
+3. **Route Protection**: Gallery route validates password and redirects to login if invalid
+4. **Data Fetching**: Retrieves model metadata from S3 endpoint (`https://hakata-public.s3.ap-northeast-1.amazonaws.com/mmd-archive-thumbs/${password}.json`)
+5. **Data Processing**: Decodes hex-encoded file paths and generates SHA-256 hashes for S3 keys
+6. **Gallery Display**: Shows random sample of 100 models with 30+ pose variations per model
 
 ### Key Technical Components
+
+**Routing**: SolidJS Router manages navigation between login (`/`) and gallery (`/gallery`) routes. Protected routes use custom `ProtectedRoute` component to guard access.
 
 **State Management**: Uses SolidJS signals with `createSignal` for reactive state management. Password and viewing mode persist in localStorage.
 
@@ -41,7 +45,10 @@ npm outdated       # Check for outdated packages
 
 ### File Structure
 
-- `src/App.tsx` - Main application component with authentication and gallery logic
+- `src/App.tsx` - Main application component with router setup and state management
+- `src/components/Login.tsx` - Login page with password input and authentication logic
+- `src/components/Gallery.tsx` - Gallery page displaying MMD model thumbnails
+- `src/components/ProtectedRoute.tsx` - Route guard component for authentication
 - `src/App.module.css` - Component-scoped styles with CSS animations
 - `src/index.tsx` - Application entry point with SolidJS setup
 - `public/CNAME` - GitHub Pages domain configuration
@@ -51,14 +58,16 @@ npm outdated       # Check for outdated packages
 
 ### Build Setup
 - **Framework**: SolidJS 1.9.9 with TypeScript 5.9.3
-- **Build Tool**: Vite 6.3.6 with ESNext target
+- **Build Tool**: Vite 7.1.7 with ESNext target
 - **Dev Server**: Port 3000 with HMR
 - **JSX**: SolidJS transform enabled
 
 ### Key Dependencies
+- **@solidjs/router**: Client-side routing for SolidJS applications
 - **lodash**: Used for `sampleSize` (random model sampling) and `throttle` (API rate limiting)
 - **buffer**: Browser polyfill for hex string processing
-- **@types/lodash**: TypeScript definitions
+- **@types/lodash**: TypeScript definitions for lodash
+- **@types/node**: TypeScript definitions for Node.js built-in modules
 
 ## Deployment
 
