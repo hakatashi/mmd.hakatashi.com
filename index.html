@@ -9,6 +9,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400&display=swap" rel="stylesheet">
     <link rel="shortcut icon" type="image/ico" href="/assets/favicon-mtvwWgEY.ico" />
     <title>Solid App</title>
+    <script>
+      // GitHub Pages SPA redirect handler
+      // Restores the original URL from sessionStorage after 404.html redirects here
+      (function() {
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
     <script type="module" crossorigin src="/assets/index-BK9Az1g6.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-Q_frJs1U.css">
   </head>
